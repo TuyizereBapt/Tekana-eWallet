@@ -31,7 +31,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = True if os.environ.get('DEBUG').lower() == 'true' else False
 
 hosts = os.environ.get('ALLOWED_HOSTS')
-ALLOWED_HOSTS = [host.strip() for host in hosts.split(',')]  if hosts else ['http://127.0.0.1']
+ALLOWED_HOSTS = [host.strip() for host in hosts.split(',')
+                 ] if hosts else ['http://127.0.0.1']
 
 
 # Application definition
@@ -44,6 +45,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
+    'registration',
+    'wallets'
 ]
 
 MIDDLEWARE = [
@@ -132,5 +136,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Rest_framework configuration settings
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 10,
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+     ],
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
 }
+
+# Enable Django to recognize the custom User model
+AUTH_USER_MODEL = "registration.AuthUser"
