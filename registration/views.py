@@ -26,6 +26,9 @@ class UserRegistrationView(APIView):
             serializer.is_valid(raise_exception=True)
             user = serializer.save()
 
+            # Create an account for the registered user. Every user should have an account
+            Account.objects.create(user=user)
+            
             return generate_drf_http_response(
                 data=UserSerializer(
                     user, context=self.get_serializer_context()
