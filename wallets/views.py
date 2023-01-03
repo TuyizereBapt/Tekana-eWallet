@@ -29,6 +29,10 @@ class AcountFundsTransferView(APIView):
                 raise InvalidTransactionException(
                     'The amount to transfer cannot be 0 or less than 0.')
 
+            if sender_account_uuid == receiver_account_uuid:
+                raise InvalidTransactionException(
+                    'Cannot transfer to a self account.')
+
             # Select accounts and lock matched database rows to prevent race conditions
             sender_account = Account.objects.select_for_update().get(uuid=sender_account_uuid)
             receiver_account = Account.objects.select_for_update().get(uuid=receiver_account_uuid)
@@ -82,14 +86,12 @@ class AcountFundsTransferView(APIView):
                 )
 
         except Exception as e:
-            error = "Transfer failed!"
-
             if isinstance(e, KeyError):
-                error = f"{error} {e} is required."
+                error = f"{e} is required."
             elif isinstance(e, InvalidTransactionException):
-                error = f"{error} {e.message}"
+                error = f"{e.message}"
             else:
-                error = f"{error} {e.args[0]}"
+                error = f"{e.args[0]}"
 
             response = generate_drf_http_response(
                 data=None,
