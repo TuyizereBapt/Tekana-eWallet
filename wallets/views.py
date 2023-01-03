@@ -6,6 +6,7 @@ from rest_framework.exceptions import ValidationError
 from base.utils import generate_drf_http_response
 from .models import Account, Transaction
 from .serializers import TransactionSerializer
+from .choices import TransactionStatusTypes, TransactionTypes
 
 
 class AcountFundsTransferView(APIView):
@@ -16,7 +17,6 @@ class AcountFundsTransferView(APIView):
             request
         """
         from .exceptions import InvalidTransactionException
-        from .choices import TransactionStatusTypes, TransactionTypes
 
         try:
             amount = request.data['amount']
@@ -39,8 +39,12 @@ class AcountFundsTransferView(APIView):
                     "Insuficient balance. The amount to transfer is more than the availbale account's balance")
 
             with django_transaction.atomic():
-                sender_account.balance = sender_account.balance - amount
-                receiver_account.balance = receiver_account.balance + amount
+                # Get the balance before the operation to store in the transaction details
+                sender_account_balance = sender_account.balance
+                sender_account.balance = sender_account_balance - amount
+
+                receiver_account_balance = receiver_account.balance
+                receiver_account.balance = receiver_account_balance + amount
                 sender_account.save()
                 receiver_account.save()
 
@@ -53,7 +57,8 @@ class AcountFundsTransferView(APIView):
                     notes=notes,
                     status=TransactionStatusTypes.COMPLETE,
                     transaction_type=TransactionTypes.DEBIT,
-                    available_account_balance=sender_account.balance
+                    account_balance_before=sender_account_balance,
+                    account_balance_after = sender_account.balance
                 )
                 credit_transaction = Transaction(
                     sender_account=sender_account,
@@ -63,7 +68,8 @@ class AcountFundsTransferView(APIView):
                     notes=notes,
                     status=TransactionStatusTypes.COMPLETE,
                     transaction_type=TransactionTypes.CREDIT,
-                    available_account_balance=receiver_account.balance
+                    account_balance_before=receiver_account_balance,
+                    account_balance_after=receiver_account.balance
                 )
 
                 transactions = Transaction.objects.bulk_create(
@@ -95,19 +101,22 @@ class AcountFundsTransferView(APIView):
         return response
 
 
-
 class TransactionsListView(APIView):
     def get(self, request, account_uuid):
         """
         List all transactions done with an account
         """
         from rest_framework.pagination import PageNumberPagination
+        from django.db.models import Q
 
         transactions = Transaction.objects.filter(
-            sender_account_uuid=account_uuid, receiver_account=account_uuid).order_by('-created_at')
+            Q(sender_account__uuid=account_uuid,
+              transaction_type=TransactionTypes.DEBIT)
+            | Q(receiver_account__uuid=account_uuid,
+                transaction_type=TransactionTypes.CREDIT)).order_by('-created_at')
 
         paginator = PageNumberPagination()
-        paginator.page_size = 10 # Set the number of items to be returned per page
+        paginator.page_size = 10  # Set the number of items to be returned per page
         result_page = paginator.paginate_queryset(transactions, request)
 
         serializer = TransactionSerializer(result_page, many=True)
