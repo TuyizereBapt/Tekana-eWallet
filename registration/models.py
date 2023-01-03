@@ -25,5 +25,16 @@ class AuthUser(AbstractUser, TimeStampedModel):
 
     objects = UserManager()
 
+    class Meta:
+        verbose_name = _("user")
+        verbose_name_plural = _("users")
+        db_table = "users"
+
+        indexes = [
+            models.Index(fields=['email', 'password'], name='email_password_idx'),
+            models.Index(fields=['first_name'], name='first_name_idx'),
+            models.Index(fields=['last_name'], name='last_name_idx'),
+        ]
+
     def __str__(self):
         return self.email
