@@ -33,6 +33,7 @@ class Transaction(TimeStampedModel):
     reason = models.CharField(max_length=50, default='')
     notes = models.TextField(default='')
     transaction_type = models.CharField(max_length=15, null=True)
+    available_account_balance = models.FloatField(verbose_name="Account's balance before the transaction", null=True)
 
     class Meta:
         db_table = "wallet_transactions"
