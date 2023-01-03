@@ -121,8 +121,4 @@ class TransactionsListView(APIView):
 
         serializer = TransactionSerializer(result_page, many=True)
 
-        return generate_drf_http_response(
-            data=serializer.data,
-            message="Transactions were successfully retrieved!",
-            status_code=status.HTTP_200_OK
-        )
+        return paginator.get_paginated_response(serializer.data)
