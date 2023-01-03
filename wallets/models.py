@@ -34,6 +34,7 @@ class Transaction(TimeStampedModel):
     notes = models.TextField(default='')
     transaction_type = models.CharField(max_length=15, null=True)
     account_balance_before = models.FloatField(verbose_name="Account's balance before the transaction", null=True)
+    account_balance_after = models.FloatField(verbose_name="Account's balance after the transaction", null=True)
 
     class Meta:
         db_table = "wallet_transactions"
