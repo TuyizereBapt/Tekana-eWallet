@@ -27,12 +27,10 @@ class UserRegistrationView(APIView):
             user = serializer.save()
 
             # Create an account for the registered user. Every user should have an account
-            Account.objects.create(user=user, name="Primary")
+            Account.objects.create(owner=user, name="Primary")
             
             return generate_drf_http_response(
-                data=UserSerializer(
-                    user, context=self.get_serializer_context()
-                ).data,
+                data=UserSerializer(user).data,
                 message="User Created Successfully. Login to get authorization token",
                 status_code=status.HTTP_201_CREATED
             )
