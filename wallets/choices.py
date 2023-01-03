@@ -6,3 +6,7 @@ class TransactionStatusTypes(TextChoices):
     PENDING = "Pending", _("Pending"),
     COMPLETE = "Complete", _("Complete"),
     FAILED = "Failed", _("Failed")
+
+class TransactionTypes(TextChoices):
+    DEBIT = "Debit", _("Debit"),
+    CREDIT = "Credit", _("Credit")
