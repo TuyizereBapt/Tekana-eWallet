@@ -13,6 +13,7 @@ class Account(TimeStampedModel):
     account_type = models.CharField(max_length=15, null=True)
     owner = models.ForeignKey(
         AppModels.USER, on_delete=models.DO_NOTHING, related_name='accounts')
+    name = models.CharField(max_length=20, null=True)
 
     class Meta:
         db_table = "wallet_accounts"
