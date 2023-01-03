@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from .models import AuthUser as User
+from wallets.serializers import AccountSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -9,6 +10,8 @@ class UserSerializer(serializers.ModelSerializer):
     #     validators=[UniqueValidator(queryset=User.objects.all())]
     # )
     # password = serializers.CharField(min_length=8)
+
+    accounts = AccountSerializer(many=True, required=False)
 
     class Meta:
         model = User
