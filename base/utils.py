@@ -71,7 +71,7 @@ def generate_drf_http_response(
     return Response(data=payload, status=status_code)
 
 class BaseAPITestCase(APITestCase):
-    def setUp(self):
+    def authorize_requests(self):
         from registration.models import AuthUser as User
         from django.urls import reverse
 
@@ -90,3 +90,4 @@ class BaseAPITestCase(APITestCase):
 
         # Set authorization token for subsequest API calls that require authorization
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + response.data["access"])
+        

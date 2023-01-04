@@ -5,6 +5,9 @@ from base.utils import BaseAPITestCase
 
 
 class UserTests(BaseAPITestCase):
+    def setUp(self):
+        self.authorize_requests()
+
     def test_register_user(self):
         """
         Ensure we can register a new user
@@ -31,7 +34,7 @@ class UserTests(BaseAPITestCase):
         # Additionally, we want to return the email upon successful creation.
         self.assertEqual(registered_user['email'], registered_user['email'])
         self.assertFalse('password' in registered_user)
-        self.assertEqual(len(registered_user["accounts"]),1)
+        self.assertEqual(len(registered_user["accounts"]), 1)
 
     def test_create_user_with_no_email(self):
         url = reverse('register-users')
