@@ -1,6 +1,8 @@
 import typing
 from rest_framework.exceptions import ValidationError, APIException
 from rest_framework.response import Response
+from rest_framework.test import APITestCase
+from rest_framework.test import APIClient
 
 
 def generate_drf_http_response(
@@ -67,3 +69,24 @@ def generate_drf_http_response(
         "errors": errors
     }
     return Response(data=payload, status=status_code)
+
+class BaseAPITestCase(APITestCase):
+    def setUp(self):
+        from registration.models import AuthUser as User
+        from django.urls import reverse
+
+        # Set the client to use in making API calls
+        self.client = APIClient()
+
+        # Create a user to use in authentication & authorization
+        email = "test@example.com"
+        password = "testpassword"
+        self.test_user = User.objects.create_user(email=email, password=password)
+
+        # Authenticate the test_user
+        url = reverse('token_obtain_pair')
+        data = {"email": email, "password": password}
+        response = self.client.post(url, data, format='json')
+
+        # Set authorization token for subsequest API calls that require authorization
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + response.data["access"])
