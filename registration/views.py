@@ -7,6 +7,7 @@ from .models import AuthUser as User
 from wallets.models import Account
 from base.utils import generate_drf_http_response
 from rest_framework.exceptions import ValidationError
+from django.db import transaction as django_transaction
 
 
 class UserRegistrationView(APIView):
@@ -23,21 +24,22 @@ class UserRegistrationView(APIView):
         serializer = RegisterSerializer(data=request.data)
 
         try:
-            serializer.is_valid(raise_exception=True)
-            user = serializer.save()
+            with django_transaction.atomic():
+                serializer.is_valid(raise_exception=True)
+                user = serializer.save()
 
-            # Create an account for the registered user. Every user should have an account
-            Account.objects.create(owner=user, name="Primary")
-            
-            return generate_drf_http_response(
-                data=UserSerializer(user).data,
-                message="User Created Successfully. Login to get authorization token",
-                status_code=status.HTTP_201_CREATED
-            )
+                # Create an account for the registered user. Every user should have an account
+                Account.objects.create(owner=user, name="Primary")
+                
+                return generate_drf_http_response(
+                    data=UserSerializer(user).data,
+                    message="User Created Successfully. Login to get authorization token",
+                    status_code=status.HTTP_201_CREATED
+                )
         except (ValidationError, Exception) as e:
 
             if isinstance(e, ValidationError):
-                errors = serializer.error_messages
+                errors = e.args[0]
             else:
                 errors = str(e)
 
