@@ -32,8 +32,8 @@ class AuthUser(AbstractUser, TimeStampedModel):
 
         indexes = [
             models.Index(fields=['email', 'password'], name='email_password_idx'),
+            models.Index(fields=['last_name', 'first_name'], name='last_name_first_name_idx'),
             models.Index(fields=['first_name'], name='first_name_idx'),
-            models.Index(fields=['last_name'], name='last_name_idx'),
         ]
 
     def __str__(self):
