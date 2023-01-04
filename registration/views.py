@@ -56,10 +56,13 @@ class RegisteredUsersView(APIView):
         """
         Get all non-deleted registered users
         """
+        from rest_framework.pagination import PageNumberPagination
+
         users = User.objects.prefetch_related('accounts').filter(is_deleted=False)
-        serializer = UserSerializer(users, many=True)
-        return generate_drf_http_response(
-            data=serializer.data,
-            message="Users successfully fetched!",
-            status_code=status.HTTP_200_OK
-        )
+
+        paginator = PageNumberPagination()
+        result_page = paginator.paginate_queryset(users, request)
+
+        serializer = UserSerializer(result_page, many=True)
+
+        return paginator.get_paginated_response(serializer.data)
