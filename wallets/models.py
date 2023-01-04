@@ -2,6 +2,7 @@ from django.db import models
 from base.models import TimeStampedModel
 from base.constants.models import AppModels
 from .choices import TransactionStatusTypes
+from django.db.models import CheckConstraint, Q
 
 
 class Account(TimeStampedModel):
@@ -17,6 +18,10 @@ class Account(TimeStampedModel):
 
     class Meta:
         db_table = "wallet_accounts"
+        constraints = [
+            # Ensures the balance field is never less than 0
+            CheckConstraint(check=Q(balance__gte=18), name='balance_gte_0')
+        ]
 
 
 class Transaction(TimeStampedModel):
@@ -38,3 +43,6 @@ class Transaction(TimeStampedModel):
 
     class Meta:
         db_table = "wallet_transactions"
+        indexes = [
+            models.Index(fields=['-created_at',], name='created_at_desc_idx'),
+        ]
