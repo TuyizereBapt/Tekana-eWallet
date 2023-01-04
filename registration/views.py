@@ -60,7 +60,7 @@ class RegisteredUsersView(APIView):
         """
         from rest_framework.pagination import PageNumberPagination
 
-        users = User.objects.prefetch_related('accounts').filter(is_deleted=False)
+        users = User.objects.prefetch_related('accounts').filter(is_deleted=False).order_by("created_at")
 
         paginator = PageNumberPagination()
         result_page = paginator.paginate_queryset(users, request)
