@@ -20,7 +20,7 @@ class Account(TimeStampedModel):
         db_table = "wallet_accounts"
         constraints = [
             # Ensures the balance field is never less than 0
-            CheckConstraint(check=Q(balance__gte=18), name='balance_gte_0')
+            CheckConstraint(check=Q(balance__gte=0), name='balance_gte_0')
         ]
 
 
