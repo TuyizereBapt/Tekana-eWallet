@@ -56,7 +56,7 @@ class RegisteredUsersView(APIView):
         """
         Get all non-deleted registered users
         """
-        users = User.objects.filter(is_deleted=False)
+        users = User.objects.prefetch_related('accounts').filter(is_deleted=False)
         serializer = UserSerializer(users, many=True)
         return generate_drf_http_response(
             data=serializer.data,
