@@ -82,7 +82,11 @@ source .venv/bin/activate
 ```
 pip install -r requirements.txt
 ```
-5. Run the server (uses the development server for the purpose of testing)
+5. Create the SQLlite DB and apply model migrations
+```
+python manage.py migrate
+```
+6 Run the server (uses the development server for the purpose of testing)
 ```
 python manage.py runserver
 ```
