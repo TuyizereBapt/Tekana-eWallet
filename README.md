@@ -1,17 +1,17 @@
 # Tekana-eWallet - Technical evaluation at RSSB
 
 <strong>Table of contents:</strong> <br>
-1. [Strategy](##Potential-strategy-to-rebuild-the-back-end-legacy-solution)
-2. [Demo application](##Demo-application)
-    * [System requirements](###System-requirements)
-    * [Tech stack](###Tech-stack)
-    * [Running the application](###Running-the-application)
-    * [API specification](###API-specification)
-        * [Register User](####Register-User)
-        * [Get access token for authorization](####Get-access-token-for-authorization)
-        * [View a list of registered users](####View-a-list-of-registered-users)
-        * [Account Funds Transfer](####Account-Funds-Transfer)
-        * [List Account Transactions](####List-Account-Transactions)
+1. [Strategy](#potential-strategy-to-rebuild-the-back-end-legacy-solution)
+2. [Demo application](#demo-application)
+    * [System requirements](#system-requirements)
+    * [Tech stack](#tech-stack)
+    * [Running the application](#running-the-application)
+    * [API specification](#api-specification)
+        * [Register User](#register-user)
+        * [Get access token for authorization](#get-access-token-for-authorization)
+        * [View a list of registered users](#view-a-list-of-registered-users)
+        * [Account Funds Transfer](#account-funds-transfer)
+        * [List Account Transactions](#list-account-transactions)
 
 
 ## Potential strategy to rebuild the back-end legacy solution
@@ -22,7 +22,7 @@
 2. Design the new back-end architecture:
  * Based on the requirements and current system, design a new back-end architecture that will meet the needs of the business and customers
  * Consider factors such as scalability, availability, fault-tolerance, security, and performance in the design
- * For the performance requirements of solution, consider the following:
+ * To improve performance, consider using the following:
     * Scalability: The system should be designed to scale horizontally, meaning that it can handle an increase in users by adding more resources (e.g. servers) rather than relying on a single, powerful server. This allows the system to handle a larger number of users without becoming overloaded
     * Caching: Caching can help reduce the load on the system by storing frequently accessed data in a temporary storage location, such as memory or disk. This allows the system to serve data to users more quickly, without having to retrieve it from a slower storage location (e.g. a database) each time it is requested
     * Load balancing: To ensure that the system can handle a large number of concurrent users, it would be necessary to use load balancing techniques to distribute incoming requests across multiple servers. This can help prevent any single server from becoming overloaded
