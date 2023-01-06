@@ -16,12 +16,27 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt import views as jwt_views
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework import permissions
+
+
+@api_view()
+@permission_classes([permissions.AllowAny])
+def index(request):
+    return Response({
+        "message": "Welcome to Tekana e-Wallet demo app"
+    })
+
 
 urlpatterns = [
+    path('', index),
     path('admin/', admin.site.urls),
 
-    path('api/token', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/token', jwt_views.TokenObtainPairView.as_view(),
+         name='token_obtain_pair'),
+    path('api/token/refresh', jwt_views.TokenRefreshView.as_view(),
+         name='token_refresh'),
 
     path('api/', include('registration.urls')),
     path('api/accounts/', include('wallets.urls')),
