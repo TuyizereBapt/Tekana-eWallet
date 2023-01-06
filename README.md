@@ -66,7 +66,7 @@
 
  ### Running the application:
 On terminal (CMD) where python is configured in PATH, run the following commands in order:
-1. Change to the directory containing source code: 
+1. Change to the directory containing source code where git repository was cloned: 
 ```
 cd /path/to/path/Tekana-eWallet
 ```
