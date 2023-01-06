@@ -149,10 +149,15 @@ Example response payload
 #### <strong>Get access token for authorization</strong>
 ---
 URI: `/api/token` <br>
-Method: `GET` <br>
+Method: `POST` <br>
 
 Request payload:
-None
+```json
+{
+    "email": "<user-email>",
+    "password": "<password>"
+}
+```
 
 Example response payload
 ```json
@@ -217,7 +222,7 @@ Example response payload
 N.B: Requires to be authenticated. Set the following header `Authorization: "Bearer <access-token>"` <br>
 
 URI: `/api/accounts/transfer` <br>
-Method: `GET` <br>
+Method: `POST` <br>
 
 Request payload:
 ```json
